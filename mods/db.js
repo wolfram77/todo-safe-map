@@ -10,10 +10,9 @@ var sqlite3 = require('sqlite3');
 module.exports = function(z) {
 	var o = new sqlite3.Database('data/data.db');
 
-	// data length
-	var dlen = function(data) {
-		for(var k in data)
-			return data[k].length;
+	// insert batch
+	o.insert = function() {
+
 	};
 
 	// run batch

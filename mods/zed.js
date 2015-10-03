@@ -26,6 +26,16 @@ module.exports = function() {
 		return dst;
 	};
 
+	// get keys in arranged/scattered data
+	o.askeys = function(src) {
+		return _.isArray(src)? _.keys(src[0]) : _.keys(src);
+	};
+
+	// get length in arranged/scattered data
+	o.aslen = function(src) {
+		return _.isArray(src)? src.length : src[_.keys(src)[0]].length;
+	};
+
 	// arrange objects of same kind into arrays
 	o.arrange = function(dst, src, ps) {
 		ps = ps? ps : _.keys(src[0]);
