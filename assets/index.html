@@ -1,8 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hello</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+	<link rel="stylesheet" href="/css/index.css">
+	<script src="/js/index.js"></script>
+	<title>safemap</title>
 </head>
 <body>
+<header>
+<nav>
+	<a href="/signin.html" data-tooltip="sign in"><i class="fa fa-user"></i></a>
+	<a href="/signup.html" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
+	<a href="/" class="active"><i id="logo-img" class="fa fa-map"></i> <span id="logo-safe">safe</span><span id="logo-map">map</span></a>
+</nav>
+<form class="z-depth-2">
+<div class="container">
+<div class="row">
+	<div class="input-field col s4">
+		<i class="fa fa-user prefix"></i>
+		<label for="id">email</label>
+		<input id="id" type="text">
+	</div>
+	<div class="input-field col s4">
+		<i class="fa fa-eye-slash prefix"></i>
+		<label for="pass">password</label>
+		<input id="pass" type="password">
+	</div>
+	<div class="input-field col s4">
+		<button class="waves-effect waves-light btn" type="submit"><i class="fa fa-check-circle"></i> sign in</button>
+	</div>
+</div>
+</div>
+</form>
+<form class="z-depth-2">
+<div class="container">
+<div class="row">
+	<div class="input-field col s6">
+		<i class="fa fa-user prefix"></i>
+		<label for="id">email</label>
+		<input id="id" type="text">
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-eye-slash prefix"></i>
+		<label for="pass">password</label>
+		<input id="pass" type="password">
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-certificate prefix"></i>
+		<label for="name">name</label>
+		<input id="name" type="text">
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-birthday-cake prefix"></i>
+		<label for="age">age</label>
+		<input id="age" type="number">
+	</div>
+	<div class="input-field col s6">
+		<select id="type">
+			<option value="" disabled selected>select type</option>
+			<option value="user">citizen</option>
+			<option value="police/user">policeman</option>
+			<option value="police/office">police office</option>
+		</select>
+		<label>type</label>
+	</div>
+	<div class="input-field col s6">
+		<select id="sex">
+			<option value="" disabled selected>select sex</option>
+			<option value="m">male</option>
+			<option value="f">female</option>
+			<option value="o">other</option>
+		</select>
+		<label>sex</label>
+	</div>
+	<div class="input-field col s12">
+		<label for="details">details</label>
+		<textarea id="details" class="materialize-textarea" placeholder="detail1=value;detail2=value;"></textarea>
+	</div>
+	<div class="input-field col s12 center-align">
+		<button class="waves-effect waves-light btn btn-large" type="submit"><i class="fa fa-check-circle"></i> sign up</button>
+	</div>
+</div>
+</div>
+</form>
+</header>
+<main></main>
+<footer></footer>
 </body>
 </html>

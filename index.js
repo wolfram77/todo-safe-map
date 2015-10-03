@@ -19,7 +19,6 @@ var z = require('./mods/zed')();
 app.all('/', function(req, res) {
 	res.sendFile(__dirname+'/assets/index.html');
 });
-
 // static dir
 app.use(express.static(__dirname+'/assets'));
 

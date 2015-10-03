@@ -1,0 +1,33 @@
+/* @wolfram77 */
+/* INDEX - main css file*/
+
+header nav {
+	display: block;
+	background-color: #8E7;
+	font-size: 2em;
+}
+header a {
+	float: right;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+header a:hover, header a:active, header a.active {
+	background-color: #AF8;
+}
+#logo-img {
+	color: #2E2;
+}
+#logo-safe {
+	color: #22A;
+}
+#logo-map {
+	color: #A22;
+}
+
+
+form {
+	padding: 1em;
+}
+header form {
+	background-color: #EFE;
+}
