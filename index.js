@@ -32,5 +32,5 @@ var server = app.listen(80, function() {
 		'name': ['a', 'b', 'c', 'd']
 	};
 	var scattered = z.scatter([], gathered);
-	console.log(z.fjoin(gathered.id, '%i a %i'));
+	console.log(z.mreplace('%s a %d', {'%s': 'name', '%d': 'place'}));
 });

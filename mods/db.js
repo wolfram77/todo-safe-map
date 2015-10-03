@@ -14,28 +14,21 @@ module.exports = function(z) {
 	// insert batch
 	o.insert = function(tab, req) {
 		var keys = z.gskeys(req);
-		o.rbatch('INSERT INTO '+tab+'('+keys.join()+') VALUES ($'+keys.join(',$')+')', req);
+		o.batch('INSERT INTO '+tab+'('+keys.join()+') VALUES ($'+keys.join(',$')+')', req);
 	};
 
-	// run batch
-	o.rbatch = function(cmd, req) {
+	// batch execute
+	// fn = (errs, res)
+	o.batch = function(cmd, req, fn) {
 		var stmt = db.prepare(cmd);
-		if(!_.isArray(req)) req = z.scatter([], req);
-		for(var i=0; i<req.length; i++)
-			stmt.run(z.krename({}, req[i], '$%i'));
-	};
-
-	// get batch
-	o.gbatch = function(cmd, req, fn) {
-		var stmt = db.prepare(cmd), res = [];
-		if(!_.isArray(req)) req = z.scatter([], req);
 		db.serialize(function() {
-			for(var i=0; i<req.length; i++)
+			for(var i=0, errs=[], res=[]; i<req.length; i++)
 				stmt.all(z.krename({}, req[i], '$%i'), function(err, rows) {
-					z.apush(res, rows);
+					if(err) errs[i] = err;
+					if(rows) z.apush(res, rows);
 				});
 			db.run('PRAGMA no_op', function() {
-				if(fn) fn(res);
+				if(fn) fn(errs, res);
 			});
 		});
 	};

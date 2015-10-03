@@ -16,6 +16,8 @@ module.exports = function(db) {
 		db.batch();
 	};
 
+	// 
+
 	// ready
 	console.log('user> ready!');
 	return o;

@@ -25,6 +25,12 @@ module.exports = function() {
 		return dst;
 	};
 
+	// multiple replace
+	o.mreplace = function(src, map) {
+		var re = new RegExp(_.keys(map).join("|"), "g");
+		return src.replace(re, function(m) { return map[m]; });
+	};
+
 	// rename keys of object
 	o.krename = function(dst, src, fmt) {
 		if(typeof fmt === 'string') for(var k in src)
