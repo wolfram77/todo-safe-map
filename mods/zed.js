@@ -15,15 +15,24 @@ module.exports = function() {
 	o.apush = function(dst, src) {
 		Array.prototype.push.apply(dst, src);
 		return dst;
-  };
+	};
+
+	// rename keys
+	o.krename = function(dst, src, fmt) {
+		if(typeof fmt === 'string') for(var k in src)
+			dst[fmt.replace(/%s/,k)] = src[k];
+		else for(var k in src)
+			dst[fmt[k]] = src[k];
+		return dst;
+	};
 
 	// arrange objects of same kind into arrays
 	o.arrange = function(dst, src, ps) {
 		ps = ps? ps : _.keys(src[0]);
-    _.forEach(ps, function(p) {
-      o.apush(dst[p] = dst[p]||[], _.pluck(src, p));
-    });
-    return dst;
+		_.forEach(ps, function(p) {
+			o.apush(dst[p] = dst[p]||[], _.pluck(src, p));
+		});
+		return dst;
 	};
 
 	// scatter arrays into objects of same kind

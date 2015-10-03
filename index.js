@@ -31,8 +31,6 @@ var server = app.listen(80, function() {
 		'id': [0, 1, 2, 3],
 		'name': ['a', 'b', 'c', 'd']
 	};
-	var scattered = z.scatter([], arranged);
-	console.log('scattered = %j', scattered);
-	var arranged = z.arrange({}, scattered);
-	console.log('arranged = %j', arranged)
+	var krenamed = z.krename({}, arranged, '$%s');
+	console.log('krenamed = %j', krenamed);
 });
