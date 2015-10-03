@@ -12,11 +12,7 @@ module.exports = function(z, db) {
 
 
 	// prepare
-	db.run(z.mreplace('CREATE TABLE IF NOT EXISTS user(id %t, pass %t, type %t, score %iz, name %t, age %i, sex %t, phone %tz, details %tz', {
-		'%t': 'AS TEXT NOT NULL',
-		'%tz': 'AS TEXT DEFAULT \'\'',
-		
-	}));
+	db.run(db.expand('CREATE TABLE IF NOT EXISTS user(id %t %pk, pass %t, type %t, score %iz, name %t, age %i, sex %t, phone %tz, details %tz) WITHOUT ROWID'));
 
 	// ready
 	console.log('user> ready!');

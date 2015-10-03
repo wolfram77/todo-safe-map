@@ -21,7 +21,8 @@ module.exports = function(z) {
 			'%t': 'TEXT NOT NULL',
 			'%tz': 'TEXT DEFAULT \'\'',
 			'%b': 'BLOB NOT NULL',
-			'%bz': 'BLOB'
+			'%bz': 'BLOB',
+			'%pk': 'PRIMARY KEY'
 		});
 	};
 
@@ -40,6 +41,15 @@ module.exports = function(z) {
 			});
 		});
 	};
+
+
+	var filter = function(k, v) {
+		var ans = k+(k.search(/[><=]/g)==-1? '=' : '');
+		if(typeof v === 'boolean') ans += v? '1' : '0';
+		else if(typeof v === 'number') ans += v;
+		else if(typeof v === 'string') ans = k;
+	};
+
 
 	// ready
 	console.log('db> ready!');
