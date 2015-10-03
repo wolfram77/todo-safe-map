@@ -1,6 +1,6 @@
 /* @wolfram77 */
 /* DB - manages db operations */
-/* fn: */
+/* fn: batch */
 
 // required modules
 var sqlite3 = require('sqlite3');
@@ -10,12 +10,6 @@ var _ = require('lodash');
 // define
 module.exports = function(z) {
 	var o = new sqlite3.Database('data/data.db');
-
-	// insert batch
-	o.insert = function(tab, req) {
-		var keys = z.gskeys(req);
-		o.batch('INSERT INTO '+tab+'('+keys.join()+') VALUES ($'+keys.join(',$')+')', req);
-	};
 
 	// batch execute
 	// fn = (errs, res)

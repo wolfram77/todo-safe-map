@@ -1,6 +1,6 @@
 /* @wolfram77 */
 /* ZED - general purpose module */
-/* fn: apush, arrange, scatter */
+/* fn: apush, fjoin, mreplace, krename, gskeys, gslen, gather, scatter */
 
 // required modules
 var EventEmitter = require('events').EventEmitter;
