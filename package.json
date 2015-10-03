@@ -1,0 +1,27 @@
+{
+  "name": "web-safemap",
+  "version": "0.0.1",
+  "description": "crime prevention and support web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wolfram77/web-safemap.git"
+  },
+  "keywords": [
+    "\"crime",
+    "prevention\"",
+    "\"google",
+    "maps\"",
+    "\"location-based",
+    "suggestions\""
+  ],
+  "author": "wolfram77@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wolfram77/web-safemap/issues"
+  },
+  "homepage": "https://github.com/wolfram77/web-safemap#readme"
+}
