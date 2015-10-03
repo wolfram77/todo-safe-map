@@ -11,6 +11,9 @@ var app = express();
 app.use(bodyParser.urlencoded({'extended': true}));
 app.use(bodyParser.json());
 
+// start mods
+var z = require('./mods/zed')();
+
 
 // http interface
 app.all('/', function(req, res) {
@@ -24,4 +27,12 @@ app.use(express.static(__dirname+'/assets'));
 // start server
 var server = app.listen(80, function() {
 	console.log(':safemap: started!');
+	var arranged = {
+		'id': [0, 1, 2, 3],
+		'name': ['a', 'b', 'c', 'd']
+	};
+	var scattered = z.scatter([], arranged);
+	console.log('scattered = %j', scattered);
+	var arranged = z.arrange({}, scattered);
+	console.log('arranged = %j', arranged)
 });
