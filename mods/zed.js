@@ -17,27 +17,35 @@ module.exports = function() {
 		return dst;
 	};
 
-	// rename keys
+	// formatted join
+	o.fjoin = function(src, fmt, sep) {
+		console.log(fmt);
+		for(var i=0,I=src.length,dst=''; i<I; i++)
+			dst += fmt.replace(/%i/g, src[i]) + (i===I-1? '' : sep||',');
+		return dst;
+	};
+
+	// rename keys of object
 	o.krename = function(dst, src, fmt) {
 		if(typeof fmt === 'string') for(var k in src)
-			dst[fmt.replace(/%s/,k)] = src[k];
+			dst[fmt.replace(/%i/g, k)] = src[k];
 		else for(var k in src)
 			dst[fmt[k]] = src[k];
 		return dst;
 	};
 
-	// get keys in arranged/scattered data
-	o.askeys = function(src) {
+	// get keys in gathered/scattered data
+	o.gskeys = function(src) {
 		return _.isArray(src)? _.keys(src[0]) : _.keys(src);
 	};
 
-	// get length in arranged/scattered data
-	o.aslen = function(src) {
+	// get length in gathered/scattered data
+	o.gslen = function(src) {
 		return _.isArray(src)? src.length : src[_.keys(src)[0]].length;
 	};
 
-	// arrange objects of same kind into arrays
-	o.arrange = function(dst, src, ps) {
+	// gather objects of same kind into arrays
+	o.gather = function(dst, src, ps) {
 		ps = ps? ps : _.keys(src[0]);
 		_.forEach(ps, function(p) {
 			o.apush(dst[p] = dst[p]||[], _.pluck(src, p));

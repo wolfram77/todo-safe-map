@@ -27,15 +27,10 @@ app.use(express.static(__dirname+'/assets'));
 // start server
 var server = app.listen(80, function() {
 	console.log(':safemap: started!');
-	var arranged = {
+	var gathered = {
 		'id': [0, 1, 2, 3],
 		'name': ['a', 'b', 'c', 'd']
 	};
-	var scattered = z.scatter([], arranged);
-	console.log('arranged = %j', arranged);
-	console.log('scattered = %j', scattered);
-	console.log('askeys = %j', z.askeys(arranged));
-	console.log('askeys = %j', z.askeys(scattered));
-	console.log('aslen = %d', z.aslen(arranged));
-	console.log('aslen = %d', z.aslen(scattered));
+	var scattered = z.scatter([], gathered);
+	console.log(z.fjoin(gathered.id, '%i a %i'));
 });
