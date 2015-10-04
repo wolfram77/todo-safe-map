@@ -49,7 +49,7 @@ module.exports = function(z) {
 			}
 		}
 		cmd = cmd.length==0? cmd : ' WHERE'+cmd.substring(4);
-		return {'cmd': cmd, 'vals': p};
+		return {'cmd': cmd, 'vals': vals};
 	};
 
 
@@ -61,7 +61,7 @@ module.exports = function(z) {
 			for(var s=0; s<stmts.length; s++) (function(s, stmt) {
 				o.all(stmt.cmd, stmt.vals, function(err, rows) {
 					if(err) errs[s] = err;
-					if(grows.length>0) grows[s] = rows;
+					grows[s] = rows;
 				});
 			})(s, stmts[s]);
 			o.run('PRAGMA no_op', function() {

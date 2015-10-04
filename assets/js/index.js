@@ -19,6 +19,28 @@ var z = (function() {
 	};
 
 
+	// gather objects of same kind into arrays
+	o.gather = function(dst, src, ps) {
+		ps = ps? ps : _.keys(src[0]);
+		_.forEach(ps, function(p) {
+			o.apush(dst[p] = dst[p]||[], _.pluck(src, p));
+		});
+		return dst;
+	};
+
+
+	// scatter arrays into objects of same kind
+	o.scatter = function(dst, src, ps) {
+		ps = ps? ps : _.keys(src);
+		for(var i=0,I=src[ps[0]].length; i<I; i++) {
+			for(var p=0,P=ps.length,v={}; p<P; p++)
+				v[ps[p]] = src[ps[p]][i];
+			dst.push(v);
+		}
+		return dst;
+	};
+
+
 	// ready
 	return o;
 })();
@@ -51,7 +73,6 @@ app.controller('mainCtrl', ['$scope', '$http', function($scope, $http) {
 		$.post('/i/user/signup', {'vals': o.user}, function(res) {
 			if(res.status==='err') {
 				Materialize.toast('sign up failed!', 3000, 'rounded');
-				if(fn) fn(res);
 				return;
 			}
 			Materialize.toast('sign up success!', 3000, 'rounded');
@@ -65,7 +86,23 @@ app.controller('mainCtrl', ['$scope', '$http', function($scope, $http) {
 	};
 
 	// user signin
-	
+	o.usignin = function() {
+		o.user = z.ivals(['id', 'pass'], '#si-%i');
+		$.post('/i/user/get', {'flt': o.user}, function(res) {
+			if(!res.res.id) {
+				Materialize.toast('sign in failed!', 3000, 'rounded');
+				return;
+			}
+			Materialize.toast('sign in success!', 3000, 'rounded');
+			$scope.$apply(function() {
+				o.user = z.scatter([], res.res)[0];
+				o.user.idhash = CryptoJS.MD5(o.user.id).toString();
+				$.cookie('id', o.user.id);
+				o.a = true;
+				o.menu = 0;
+			});
+		});
+	};
 }]);
 
 
