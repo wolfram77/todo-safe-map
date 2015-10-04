@@ -21,9 +21,28 @@ var user = require('./mods/user')(z, db);
 app.all('/', function(req, res) {
 	res.sendFile(__dirname+'/assets/index.html');
 });
-app.all('/user/add', function(req, res) {
-	user.add(req, function(errs, rows) {
-		res.send({'errs': errs, 'rows': rows});
+app.all('/user/signup', function(req, res) {
+	var freq = req.body;
+	user.signup(freq, function(fres) {
+		res.send(fres);
+	});
+});
+app.all('/user/signoff', function(req, res) {
+	var freq = req.body;
+	user.signoff(freq, function(fres) {
+		res.send(fres);
+	});
+});
+app.all('/user/signin', function(req, res) {
+	var freq = req.body;
+	user.signin(freq, function(fres) {
+		res.send(fres);
+	});
+});
+app.all('/user/update', function(req, res) {
+	var freq = req.body;
+	user.update(freq.key, freq.req, function(fres) {
+		res.send(fres);
 	});
 });
 
@@ -33,11 +52,5 @@ app.use(express.static(__dirname+'/assets'));
 
 // start server
 var server = app.listen(80, function() {
-	console.log(':safemap: started!');
-	var gathered = {
-		'id': [0, 1, 2, 3],
-		'name': ['a', 'b', 'c', 'd']
-	};
-	var scattered = z.scatter([], gathered);
-	console.log(z.mreplace('%s a %d', {'%s': 'name', '%d': 'place'}));
+	console.log('safemap>> ready!');
 });

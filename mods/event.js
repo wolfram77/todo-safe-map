@@ -1,6 +1,7 @@
 /* @wolfram77 */
 /* EVENT - manages event information */
 /* db: _id, t, x, y, type, factor, details */
+/* fn:  */
 
 // required modules
 var EventEmitter = require('events').EventEmitter;
@@ -8,18 +9,40 @@ var _ = require('lodash');
 
 
 // define
-module.exports = function() {
+module.exports = function(z, db, user) {
 	var o = new EventEmitter();
 
-	
-	// remove
-	o.remove = function(req) {
-		if(req.id) 
+	// get
+	o.get = function() {
+	};
+
+	// create
+	o.create = function(key, req, fn) {
+		user.id(key, function(id) {
+			if(id===null) {
+				if(fn) fn({'status': 'err'});
+				return;
+			}
+			req.id = _.now();
+			db.insert('event', req, function(errs, rows) {
+				if(errs[0]) {
+					if(fn) fn({'status': 'err'});
+					return;
+				}
+				if(fn) fn({'status': 'ok', 'res': req});
+			});
+		});
+	};
+
+	o.groupadd = function(req) {
+
 	};
 
 
 	// prepare
-	db.run('CREATE TABLE IF NOT EXISTS event(t INTEGER, x REAL, y REAL, type TEXT, factor REAL, details TEXT)');
+	db.create('event', ['id INTEGER %p', 'x %R', 'y %R', 'type %T', 'factor %r', 'details %t']);
+	db.create('event_group', ['event %I', 'user %I', 'type %T', 'details %t']);
+	db.create('event_contrib', ['event %I', 'user %I', 'type %T', 'details %t']);
 
 	// ready
 	console.log('event> ready!');
