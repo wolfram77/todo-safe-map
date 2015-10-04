@@ -35,13 +35,13 @@
 <div class="row">
 	<div class="input-field col s4">
 		<i class="fa fa-user prefix"></i>
-		<label for="id">email</label>
-		<input id="id" type="text">
+		<label for="si-id">email</label>
+		<input id="si-id" type="text">
 	</div>
 	<div class="input-field col s4">
 		<i class="fa fa-eye-slash prefix"></i>
-		<label for="pass">password</label>
-		<input id="pass" type="password">
+		<label for="si-pass">password</label>
+		<input id="si-pass" type="password">
 	</div>
 	<div class="input-field col s4">
 		<button class="waves-effect waves-light btn btn-large" type="submit"><i class="fa fa-check-circle"></i> sign in</button>
@@ -54,26 +54,26 @@
 <div class="row">
 	<div class="input-field col s6">
 		<i class="fa fa-user prefix"></i>
-		<label for="id">email</label>
-		<input id="id" type="text">
+		<label for="su-id">email</label>
+		<input id="su-id" type="text">
 	</div>
 	<div class="input-field col s6">
 		<i class="fa fa-eye-slash prefix"></i>
-		<label for="pass">password</label>
-		<input id="pass" type="password">
+		<label for="su-pass">password</label>
+		<input id="su-pass" type="password">
 	</div>
 	<div class="input-field col s6">
 		<i class="fa fa-certificate prefix"></i>
-		<label for="name">name</label>
-		<input id="name" type="text">
+		<label for="su-name">name</label>
+		<input id="su-name" type="text">
 	</div>
 	<div class="input-field col s6">
 		<i class="fa fa-birthday-cake prefix"></i>
-		<label for="age">age</label>
-		<input id="age" type="number">
+		<label for="su-age">age</label>
+		<input id="su-age" type="number">
 	</div>
 	<div class="input-field col s6">
-		<select id="type">
+		<select id="su-type">
 			<option value="" disabled selected>select type</option>
 			<option value="user">citizen</option>
 			<option value="police/user">policeman</option>
@@ -82,7 +82,7 @@
 		<label>type</label>
 	</div>
 	<div class="input-field col s6">
-		<select id="sex">
+		<select id="su-sex">
 			<option value="" disabled selected>select sex</option>
 			<option value="m">male</option>
 			<option value="f">female</option>
@@ -91,11 +91,11 @@
 		<label>sex</label>
 	</div>
 	<div class="input-field col s12">
-		<label for="details">details</label>
-		<textarea id="details" class="materialize-textarea" placeholder="detail1=value;detail2=value;"></textarea>
+		<label for="su-details">details</label>
+		<textarea id="su-details" class="materialize-textarea" placeholder="detail1=value;detail2=value;"></textarea>
 	</div>
 	<div class="input-field col s12 center-align">
-		<button class="waves-effect waves-light btn btn-large" type="submit"><i class="fa fa-check-circle"></i> sign up</button>
+		<button class="waves-effect waves-light btn btn-large" onclick="user.signup()"><i class="fa fa-check-circle"></i> sign up</button>
 	</div>
 </div>
 </div>

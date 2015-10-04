@@ -61,7 +61,7 @@ module.exports = function(z) {
 			for(var s=0; s<stmts.length; s++) (function(s, stmt) {
 				o.all(stmt.cmd, stmt.vals, function(err, rows) {
 					if(err) errs[s] = err;
-					if(rows.length>0) grows[s] = rows;
+					if(grows.length>0) grows[s] = rows;
 				});
 			})(s, stmts[s]);
 			o.run('PRAGMA no_op', function() {
