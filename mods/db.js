@@ -56,14 +56,12 @@ module.exports = function(z) {
 	o.batch = function(cmds, params, fn) {
 		var errs = [], res = [];
 		o.serialize(function() {
-			for(var c=0; c<cmds.length; c++) {
-				console.log(cmds[c]);
-				console.log(params[c]);
+			for(var c=0; c<cmds.length; c++) (function(c) {
 				o.all(cmds[c], params[c], function(err, rows) {
 					if(err) errs[c] = err;
 					if(rows) res[c] = rows;
 				});
-			}
+			})(c);
 			o.run('PRAGMA no_op', function() {
 				if(fn) fn(errs, res);
 			});
@@ -97,9 +95,10 @@ module.exports = function(z) {
 
 	// delete rows
 	o.delete = function(tab, req, fn) {
+		var cmds = [], params = [];
 		req = _.isArray(req)? req : [req];
 		for(var r=0; r<req.length; r++) {
-			var flt = filter(req[r]);
+			var flt = o.filter(req[r]);
 			cmds.push('DELETE FROM '+tab+flt.cmd);
 			params.push(flt.params);
 		}
@@ -108,9 +107,10 @@ module.exports = function(z) {
 
 	// select rows
 	o.select = function(tab, req, fn) {
+		var cmds = [], params = [];
 		req = _.isArray(req)? req : [req];
 		for(var r=0; r<req.length; r++) {
-			var flt = filter(req[r]);
+			var flt = o.filter(req[r]);
 			cmds.push('SELECT * FROM '+tab+flt.cmd);
 			params.push(flt.params);
 		}
@@ -119,6 +119,7 @@ module.exports = function(z) {
 
 	// update rows
 	o.update = function(tab, req, fn) {
+		var cmds = [], params = [];
 		req = _.isArray(req)? req : [req];
 		for(var r=0; r<req.length; r++) {
 			var cmd = '', param = [];
@@ -127,7 +128,7 @@ module.exports = function(z) {
 				param.push(req[r].set[sk]);
 			}
 			cmd = cmd.substring(0, cmd.length-2);
-			var flt = filter(req[r].where);
+			var flt = o.filter(req[r].where);
 			cmds.push('UPDATE '+tab+' SET '+cmd+flt.cmd);
 			z.apush(param, flt.params);
 			params.push(param);

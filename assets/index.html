@@ -19,6 +19,7 @@
 <nav>
 	<a ng-class="{active: is(2)}" ng-click="set(2)" href="#" data-tooltip="sign in"><i class="fa fa-user"></i></a>
 	<a ng-class="{active: is(1)}" ng-click="set(1)" href="#" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
+	<a href="#" data-tooltip="my location" onclick="map.loc(0)"><i class="fa fa-map-pin"></i></a>
 	<a ng-class="{active: is(0)}" ng-click="set(0)" href="#">
 		<i id="logo-img" class="fa fa-map"></i> <span id="logo-safe">safe</span><span id="logo-map">map</span>
 	</a>

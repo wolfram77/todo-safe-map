@@ -92,4 +92,25 @@ $(document).ready(function() {
   $('[data-tooltip]').tooltip({'delay': 50});
   $('select').material_select();
   (map = Map('map')).loc(10);
+  req = {
+    'id': {'>=': 0, '<': (new Date()).getTime()},
+    'x': {'>=': -180.0, '<': 180.0},
+    'y': {'>=': -90.0, '<': 90.0},
+    'type': 'crime/muggle'
+  };
+  $.post('/event/get', req, function(res) {
+    res = res.res;
+    heatmapdata = [];
+    for(var i=0; i<res.id.length; i++)
+      heatmapdata[i] = {
+        'location': new google.maps.LatLng(res.y[i], res.x[i]),
+        'weight': 1.0
+      };
+      var heatmap = new google.maps.visualization.HeatmapLayer({
+        'dissipating': false,
+        'maxIntensity': 100,
+        'data': heatmapdata
+      });
+      heatmap.setMap(map);
+  });
 });

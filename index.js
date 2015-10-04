@@ -74,5 +74,4 @@ var sampledata = function() {
 // start server
 var server = app.listen(80, function() {
 	console.log('safemap>> ready!');
-	sampledata();
 });
