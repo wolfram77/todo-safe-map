@@ -17,20 +17,22 @@
 <body ng-app="app">
 <div id="map"></div>
 <div id="body">
-<header ng-controller="valCtrl" ng-init="set(0)">
+<header ng-controller="mainCtrl" ng-init="mset(0)">
 <nav>
-	<a ng-show="id" ng-class="{active: is(4)}" ng-click="set(4)" href="#" data-tooltip="sign off"><i class="fa fa-power-off"></i></a>
-	<a ng-show="id" ng-class="{active: is(3)}" ng-click="set(3)" href="#" data-tooltip="account"><i class="fa fa-user"></i></a>
-	<a ng-hide="id" ng-class="{active: is(2)}" ng-click="set(2)" href="#" data-tooltip="sign in"><i class="fa fa-user"></i></a>
-	<a ng-hide="id" ng-class="{active: is(1)}" ng-click="set(1)" href="#" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
-	<a ng-show="id" ng-class="{active: is(2)}" ng-click="set(2)" href="#" data-tooltip="create alert"><i class="fa fa-hourglass"></i></a>
-	<a ng-show="id" ng-class="{active: is(1)}" ng-click="set(1)" href="#" data-tooltip="create event"><i class="fa fa-warning"></i></a>
+	<a ng-show="a" ng-class="mcls(6)" ng-click="mset(6)" href="#" data-tooltip="sign off"><i class="fa fa-power-off"></i></a>
+	<a ng-show="a" class="img" ng-class="mcls(5)" ng-click="mset(5)" href="#" data-tooltip="account" style="height: 64px;">
+		<img id="user-logo" ng-src="http://www.gravatar.com/avatar/{{user.idhash}}">
+	</a>
+	<a ng-hide="a" ng-class="mcls(4)" ng-click="mset(4)" href="#" data-tooltip="sign in"><i class="fa fa-user"></i></a>
+	<a ng-hide="a" ng-class="mcls(3)" ng-click="mset(3)" href="#" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
+	<a ng-show="a" ng-class="mcls(2)" ng-click="mset(2)" href="#" data-tooltip="create alert"><i class="fa fa-hourglass"></i></a>
+	<a ng-show="a" ng-class="mcls(1)" ng-click="mset(1)" href="#" data-tooltip="create event"><i class="fa fa-warning"></i></a>
 	<a href="#" data-tooltip="my location" onclick="map.loc(0)"><i class="fa fa-map-pin"></i></a>
-	<a ng-class="{active: is(0)}" ng-click="set(0)" href="#">
+	<a ng-class="mcls(0)" ng-click="mset(0)" href="#">
 		<i id="logo-img" class="fa fa-map"></i> <span id="logo-safe">safe</span><span id="logo-map">map</span>
 	</a>
 </nav>
-<form class="z-depth-2" ng-show="is(2)">
+<form class="z-depth-2" ng-show="mis(4)">
 <div class="container">
 <div class="row">
 	<div class="input-field col s4">
@@ -49,7 +51,7 @@
 </div>
 </div>
 </form>
-<form class="z-depth-2" ng-show="is(1)">
+<form class="z-depth-2" ng-show="mis(3)">
 <div class="container">
 <div class="row">
 	<div class="input-field col s6">
@@ -95,7 +97,7 @@
 		<textarea id="su-details" class="materialize-textarea" placeholder="detail1=value;detail2=value;"></textarea>
 	</div>
 	<div class="input-field col s12 center-align">
-		<button class="waves-effect waves-light btn btn-large" onclick="user.signup()"><i class="fa fa-check-circle"></i> sign up</button>
+		<button class="waves-effect waves-light btn btn-large" ng-click="usignup()"><i class="fa fa-check-circle"></i> sign up</button>
 	</div>
 </div>
 </div>

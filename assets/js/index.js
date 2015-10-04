@@ -6,43 +6,8 @@ var app = angular.module('app', []);
 var z = null, user = null, map = null;
 
 
-// value controller
-app.controller('valCtrl', ['$scope', '$http', function($scope, $http) {
-	var o = $scope;
-
-	// set
-	o.set = function(v)   {
-		o.value = v;
-	};
-
-	// get value
-	o.get = function() {
-		return o.value;
-	};
-
-	// is?
-	o.is = function(v) {
-		return o.value === v;
-	};
-
-	// load
-	o.load = function(req, gap) {
-		if(gap) setInterval(function() { o.load(req); }, gap);
-		$http.post(o.url, req).success(function(res) {
-			o.set(res);
-		});
-	};
-
-	// save
-	o.save = function(gap) {
-		if(gap) setInterval(o.save, gap);
-		$http.post(o.url, o.get());
-	};
-}]);
-
-
-// zed module
-var Zed = function() {
+// z module
+var z = (function() {
 	var o = {};
 
 	// input values
@@ -53,34 +18,55 @@ var Zed = function() {
 		return vals;
 	};
 
+
 	// ready
 	return o;
-};
-z = Zed();
+})();
 
 
-// user module
-var User = function() {
-	var o = {};
+// main controller
+app.controller('mainCtrl', ['$scope', '$http', function($scope, $http) {
+	var o = $scope;
+	o.user = {};
+	o.a = false;
 
-	o.signup = function(fn) {
-		var vals = z.ivals(['id', 'pass', 'name', 'age', 'type', 'sex', 'details'], '#su-%i');
-		$.post('/i/user/signup', z.ivals(['id', 'pass', 'name', 'age', 'type', 'sex', 'details'], '#su-%i'), function(res) {
+	// menu set
+	o.mset = function(v)   {
+		o.menu = v;
+	};
+
+	// menu is?
+	o.mis = function(v) {
+		return o.menu===v;
+	};
+
+	// menu class
+	o.mcls = function(v) {
+		return o.menu===v? 'active' : '';
+	};
+
+	// user signup
+	o.usignup = function() {
+		o.user = z.ivals(['id', 'pass', 'name', 'age', 'type', 'sex', 'details'], '#su-%i');
+		$.post('/i/user/signup', {'vals': o.user}, function(res) {
 			if(res.status==='err') {
 				Materialize.toast('sign up failed!', 3000, 'rounded');
 				if(fn) fn(res);
 				return;
 			}
 			Materialize.toast('sign up success!', 3000, 'rounded');
-			$.cookie('id', res.res.id);
-			if(fn) fn(res);
+			$scope.$apply(function() {
+				o.user.idhash = CryptoJS.MD5(o.user.id).toString();
+				$.cookie('id', o.user.id);
+				o.a = true;
+				o.menu = 0;
+			});
 		});
 	};
 
-	// ready
-	return o;
-};
-user = User();
+	// user signin
+	
+}]);
 
 
 // map module
@@ -129,8 +115,16 @@ var Map = function(elem) {
 };
 
 
+// set image sizes
+var imgsize = function() {
+	$('#user-logo').css('height', $('#user-logo').css('line-height'));
+	$('header a.img').css('height', $('header a.img').css('line-height'));
+};
+
+
 // prepare
 $(document).ready(function() {
+	imgsize();
 	$('[data-tooltip]').tooltip({'delay': 50});
 	$('select').material_select();
 	(map = Map('map')).loc(10);

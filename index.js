@@ -76,33 +76,40 @@ app.all('/i/db/update', function(req, res) {
 });
 // user interface
 app.all('/i/user/signup', function(req, res) {
-	var freq = req.body;
-	user.signup(freq, function(fres) {
-		res.send(fres);
+	var p = req.body;
+	user.signup(p.vals, function(q) {
+		res.send(q);
 	});
 });
 app.all('/i/user/signoff', function(req, res) {
-	var freq = req.body;
-	user.signoff(freq, function(fres) {
-		res.send(fres);
+	var p = req.body;
+	user.signoff(p.key, function(q) {
+		res.send(q);
 	});
 });
 app.all('/i/user/signin', function(req, res) {
-	var freq = req.body;
-	user.signin(freq, function(fres) {
-		res.send(fres);
+	var p = req.body;
+	user.signin(p.req, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/user/get', function(req, res) {
+	var p = req.body;
+	user.get(p.flt, function(q) {
+		res.send(q);
 	});
 });
 app.all('/i/user/update', function(req, res) {
-	var freq = req.body;
-	user.update(freq.key, freq.req, function(fres) {
-		res.send(fres);
+	var p = req.body;
+	user.update(p.flt, p.vals, function(q) {
+		res.send(q);
 	});
 });
+// event interface
 app.all('/i/event/get', function(req, res) {
-	var freq = req.body;
-	event.get(freq, function(fres) {
-		res.send(fres);
+	var p = req.body;
+	event.get(p.flt, function(q) {
+		res.send(q);
 	});
 });
 

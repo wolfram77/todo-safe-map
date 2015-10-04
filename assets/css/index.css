@@ -25,6 +25,10 @@ header a {
 	padding-left: 1em;
 	padding-right: 1em;
 }
+header a.img {
+	padding-left: 0;
+	padding-right: 0;
+}
 header a:hover, header a:active, header a.active {
 	background-color: #AF8;
 }
