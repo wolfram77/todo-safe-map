@@ -66,6 +66,7 @@ module.exports = function() {
 
 	// gather objects of same kind into arrays
 	o.gather = function(dst, src, ps) {
+		if(src.length===0) return {};
 		ps = ps? ps : _.keys(src[0]);
 		_.forEach(ps, function(p) {
 			o.apush(dst[p] = dst[p]||[], _.pluck(src, p));
@@ -77,6 +78,7 @@ module.exports = function() {
 	// scatter arrays into objects of same kind
 	o.scatter = function(dst, src, ps) {
 		ps = ps? ps : _.keys(src);
+		if(ps.length===0) return [];
 		for(var i=0,I=src[ps[0]].length; i<I; i++) {
 			for(var p=0,P=ps.length,v={}; p<P; p++)
 				v[ps[p]] = src[ps[p]][i];

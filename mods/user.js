@@ -14,7 +14,6 @@ module.exports = function(z, db) {
 
 	// sign up
 	o.signup = function(vals, fn) {
-		console.log('user.signup> %j', vals);
 		db.insert('user', vals, function(errs, grows) {
 			if(fn) fn({'status': (errs[0]? 'err': 'ok'), 'res': vals});
 		});

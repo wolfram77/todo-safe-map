@@ -106,9 +106,69 @@ app.all('/i/user/update', function(req, res) {
 	});
 });
 // event interface
+app.all('/i/event/create', function(req, res) {
+	var p = req.body;
+	event.create(p.vals, function(q) {
+		res.send(q);
+	});
+});
 app.all('/i/event/get', function(req, res) {
 	var p = req.body;
 	event.get(p.flt, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/update', function(req, res) {
+	var p = req.body;
+	event.update(p.flt, p.vals, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/groupadd', function(req, res) {
+	var p = req.body;
+	event.groupadd(p.vals, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/groupremove', function(req, res) {
+	var p = req.body;
+	event.groupremove(p.flt, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/groupget', function(req, res) {
+	var p = req.body;
+	event.groupget(p.flt, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/groupupdate', function(req, res) {
+	var p = req.body;
+	event.groupupdate(p.flt, p.vals, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/contribadd', function(req, res) {
+	var p = req.body;
+	event.contribadd(p.vals, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/contribremove', function(req, res) {
+	var p = req.body;
+	event.contribremove(p.flt, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/contribget', function(req, res) {
+	var p = req.body;
+	event.contribget(p.flt, function(q) {
+		res.send(q);
+	});
+});
+app.all('/i/event/contribupdate', function(req, res) {
+	var p = req.body;
+	event.contribupdate(p.flt, p.vals, function(q) {
 		res.send(q);
 	});
 });

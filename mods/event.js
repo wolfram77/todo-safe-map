@@ -14,7 +14,7 @@ module.exports = function(z, db, user) {
 
 	// create
 	// to use with loc specifier
-	o.create = function(vals, mbr, fn) {
+	o.create = function(vals, fn) {
 		db.insert('event', vals, function(errs, grows) {
 			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
 		});
@@ -55,6 +55,7 @@ module.exports = function(z, db, user) {
 
 	// get group
 	o.groupget = function(flt, fn) {
+		console.log('event.groupget> %j', flt);
 		db.select('event_group', flt, function(errs, grows) {
 			if(fn) fn({'status': 'ok', 'res': z.gather({}, grows[0])});
 		});

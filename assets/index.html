@@ -20,13 +20,13 @@
 <div id="body">
 <header ng-controller="mainCtrl" ng-init="mset(0)">
 <nav>
-	<a ng-show="a" ng-class="mcls(6)" ng-click="mset(6)" href="#" data-tooltip="sign off"><i class="fa fa-power-off"></i></a>
-	<a ng-show="a" class="img" ng-class="mcls(5)" ng-click="mset(5)" href="#" data-tooltip="account" style="height: 64px;">
-		<img id="user-logo" ng-src="http://www.gravatar.com/avatar/{{user.idhash}}">
+	<a ng-show="a" ng-click="usignoff()" href="#" data-tooltip="sign off"><i class="fa fa-power-off"></i></a>
+	<a ng-show="a" class="img" ng-class="mcls(5)" ng-click="mset(5); uupdate0();" href="#" data-tooltip="account" style="height: 64px;">
+		<img id="user-logo" ng-src="http://www.gravatar.com/avatar/{{uidhash}}">
 	</a>
 	<a ng-hide="a" ng-class="mcls(4)" ng-click="mset(4)" href="#" data-tooltip="sign in"><i class="fa fa-user"></i></a>
 	<a ng-hide="a" ng-class="mcls(3)" ng-click="mset(3)" href="#" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
-	<a ng-show="a" ng-class="mcls(2)" ng-click="mset(2)" href="#" data-tooltip="create alert"><i class="fa fa-hourglass"></i></a>
+	<a ng-show="a" ng-class="mcls(2)" ng-click="mset(2); eget();" href="#" data-tooltip="events"><i class="fa fa-bars"></i></a>
 	<a ng-show="a" ng-class="mcls(1)" ng-click="mset(1)" href="#" data-tooltip="create event"><i class="fa fa-warning"></i></a>
 	<a href="#" data-tooltip="my location" onclick="map.loc(0)"><i class="fa fa-map-pin"></i></a>
 	<a ng-class="mcls(0)" ng-click="mset(0)" href="#">
@@ -99,6 +99,197 @@
 	</div>
 	<div class="input-field col s12 center-align">
 		<button class="waves-effect waves-light btn btn-large" ng-click="usignup()"><i class="fa fa-check-circle"></i> sign up</button>
+	</div>
+</div>
+</div>
+</form>
+<form class="z-depth-2" ng-show="mis(5)">
+<div class="container">
+<div class="row">
+	<div class="input-field col s6">
+		<i class="fa fa-user prefix"></i>
+		<label for="ud-id" class="active">email</label>
+		<input id="ud-id" type="text" value=" " disabled>
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-eye-slash prefix"></i>
+		<label for="ud-pass" class="active">password</label>
+		<input id="ud-pass" type="password" value=" ">
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-certificate prefix"></i>
+		<label for="ud-name" class="active">name</label>
+		<input id="ud-name" type="text" value=" ">
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-birthday-cake prefix"></i>
+		<label for="ud-age" class="active">age</label>
+		<input id="ud-age" type="number" value="0">
+	</div>
+	<div class="input-field col s6">
+		<select id="ud-type">
+			<option value="" disabled selected>select type</option>
+			<option value="user">citizen</option>
+			<option value="police/user">policeman</option>
+			<option value="police/office">police office</option>
+		</select>
+		<label>type</label>
+	</div>
+	<div class="input-field col s6">
+		<select id="ud-sex">
+			<option value="" disabled selected>select sex</option>
+			<option value="m">male</option>
+			<option value="f">female</option>
+			<option value="o">other</option>
+		</select>
+		<label>sex</label>
+	</div>
+	<div class="input-field col s12">
+		<label for="ud-details" class="active">details</label>
+		<textarea id="ud-details" class="materialize-textarea" placeholder="detail1=value;detail2=value;"></textarea>
+	</div>
+	<div class="input-field col s12 center-align">
+		<button class="waves-effect waves-light btn btn-large" ng-click="uupdate()"><i class="fa fa-check-circle"></i> update</button>
+	</div>
+</div>
+</div>
+</form>
+<form class="z-depth-2" ng-show="mis(1)">
+<div class="container">
+<div class="row">
+	<div class="input-field col s6">
+		<i class="fa fa-info-circle prefix"></i>
+		<label for="ev-type" class="active">type</label>
+		<input id="ev-type" type="text" value="crime/muggle">
+	</div>
+	<div class="input-field col s6">
+		<i class="fa fa-bolt prefix"></i>
+		<label for="ev-factor" class="active">factor</label>
+		<input id="ev-factor" type="number" value="1.0">
+	</div>
+	<div class="input-field col s12">
+		<label for="ev-details">details</label>
+		<textarea id="ev-details" class="materialize-textarea" placeholder="detail1=value;detail2=value;"></textarea>
+	</div>
+	<div class="input-field col s12 center-align">
+		<button class="waves-effect waves-light btn btn-large" ng-click="ecreate()"><i class="fa fa-check-circle"></i> create event</button>
+	</div>
+</div>
+</div>
+</form>
+<form class="z-depth-2" ng-show="mis(2)">
+<div class="container">
+<table class="responsive-table centered highlight striped">
+	<thead>
+	<tr>
+		<th>id</th>
+		<th>longitude</th>
+		<th>latitude</th>
+		<th>type</th>
+		<th>factor</th>
+		<th>details</th>
+	</tr>
+	</thead>
+	<tr ng-repeat="e in events" ng-click="eview(e.id)">
+		<td>{{e.id}}</td>
+		<td>{{e.x}}</td>
+		<td>{{e.y}}</td>
+		<td>{{e.type}}</td>
+		<td>{{e.factor}}</td>
+		<td>{{e.details}}</td>
+	</tr>
+</table>
+</div>
+</form>
+<form class="z-depth-2" ng-show="mis(6)">
+<div class="container">
+<table class="responsive-table centered highlight striped">
+	<caption>event</caption>
+	<thead>
+	<tr>
+		<th>id</th>
+		<th>longitude</th>
+		<th>latitude</th>
+		<th>type</th>
+		<th>factor</th>
+		<th>details</th>
+	</tr>
+	</thead>
+	<tr ng-repeat="e in event">
+		<td>{{e.id}}</td>
+		<td>{{e.x}}</td>
+		<td>{{e.y}}</td>
+		<td>{{e.type}}</td>
+		<td>{{e.factor}}</td>
+		<td>{{e.details}}</td>
+	</tr>
+</table>
+<table class="responsive-table centered highlight striped">
+	<caption>group</caption>
+	<thead>
+	<tr>
+		<th>user</th>
+		<th>type</th>
+		<th>details</th>
+	</tr>
+	</thead>
+	<tr ng-repeat="e in egroup">
+		<td>{{e.user}}</td>
+		<td>{{e.type}}</td>
+		<td>{{e.details}}</td>
+	</tr>
+</table>
+<div class="row">
+	<div class="input-field col s3">
+		<i class="fa fa-user prefix"></i>
+		<label for="eg-user">user</label>
+		<input id="eg-user" type="text">
+	</div>
+	<div class="input-field col s3">
+		<i class="fa fa-info-circle prefix"></i>
+		<label for="eg-type">type</label>
+		<input id="eg-type" type="text">
+	</div>
+	<div class="input-field col s3">
+		<label for="eg-details">details</label>
+		<input id="eg-details" type="text">
+	</div>
+	<div class="input-field col s3">
+		<button class="waves-effect waves-light btn" ng-click="egroupadd()"><i class="fa fa-check-circle"></i> add user</button>
+	</div>
+</div>
+<table class="responsive-table centered highlight striped">
+	<caption>contibutions</caption>
+	<thead>
+	<tr>
+		<th>user</th>
+		<th>type</th>
+		<th>details</th>
+	</tr>
+	</thead>
+	<tr ng-repeat="e in econtrib">
+		<td>{{e.user}}</td>
+		<td>{{e.type}}</td>
+		<td>{{e.details}}</td>
+	</tr>
+</table>
+<div class="row">
+	<div class="input-field col s3">
+		<i class="fa fa-user prefix"></i>
+		<label for="ec-user" class="active">user</label>
+		<input id="ec-user" type="text" value=" " disabled>
+	</div>
+	<div class="input-field col s3">
+		<i class="fa fa-info-circle prefix"></i>
+		<label for="ec-type">type</label>
+		<input id="ec-type" type="text">
+	</div>
+	<div class="input-field col s3">
+		<label for="ec-details">details</label>
+		<input id="ec-details" type="text">
+	</div>
+	<div class="input-field col s3">
+		<button class="waves-effect waves-light btn" ng-click="econtribadd()"><i class="fa fa-check-circle"></i> add contrib</button>
 	</div>
 </div>
 </div>
