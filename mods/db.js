@@ -26,115 +26,123 @@ module.exports = function(z) {
 		});
 	};
 
+
 	// create filter (where part)
-	o.filter = function(req) {
-		var cmd = '', p = [];
-		for(var k in req) {
-			var v = req[k], tv = typeof v, f = k;
+	o.filter = function(flt) {
+		var cmd = '', vals = [];
+		for(var k in flt) {
+			var v = flt[k], tv = typeof v;
 			if(tv==='number' || tv==='string') {
-				f = k+(k.search(/[><=:%#]/g)==-1? ' =' : '');
+				var f = k + (k.search(/[><=:%#]/g)==-1? ' =' : '');
 				f = z.mreplace(f, {':': ' NOT', '%': ' LIKE', '#': ' REGEXP'});
 				cmd += ' AND '+f+' ?';
-				p.push(v);
+				vals.push(v);
 				continue;
 			}
 			if(_.isArray(v)) {
-				cmd += ' AND '+f+' IN ('+z.array([], v.length, '?').join()+')';
-				z.apush(p, v);
+				cmd += ' AND '+k+' IN ('+z.array([], v.length, '?').join()+')';
+				z.apush(vals, v);
 			}
 			else for(var ck in v) {
-				cmd += ' AND '+f+ck+'?';
-				p.push(v[ck]);
+				cmd += ' AND '+k+ck+'?';
+				vals.push(v[ck]);
 			}
 		}
 		cmd = cmd.length==0? cmd : ' WHERE'+cmd.substring(4);
-		return {'cmd': cmd, 'params': p};
+		return {'cmd': cmd, 'vals': p};
 	};
 
+
 	// batch execute
-	// fn = (errs, res)
-	o.batch = function(cmds, params, fn) {
-		var errs = [], res = [];
+	// fn = (errs, grows)
+	o.batch = function(stmts, fn) {
+		var errs = [], grows = [];
 		o.serialize(function() {
-			for(var c=0; c<cmds.length; c++) (function(c) {
-				o.all(cmds[c], params[c], function(err, rows) {
-					if(err) errs[c] = err;
-					if(rows) res[c] = rows;
+			for(var s=0; s<stmts.length; s++) (function(s, stmt) {
+				o.all(stmt.cmd, stmt.vals, function(err, rows) {
+					if(err) errs[s] = err;
+					if(rows.length>0) grows[s] = rows;
 				});
-			})(c);
+			})(s, stmts[s]);
 			o.run('PRAGMA no_op', function() {
-				if(fn) fn(errs, res);
+				if(fn) fn(errs, grows);
 			});
 		});
 	};
 
+
 	// create table
-	o.create = function(tab, req, end) {
-		var f = [], ke = end || '';
-		for(var i=0; i<req.length; i++)
-			f.push(o.expand(req[i]));
-		o.run('CREATE TABLE IF NOT EXISTS '+tab+'('+f.join()+')'+ke);
+	o.create = function(tab, flds, sfx) {
+		for(var f=0; f<flds.length; f++)
+			cols.push(o.expand(flds[f]));
+		o.run('CREATE TABLE IF NOT EXISTS '+tab+'('+cols.join()+')'+(sfx||''));
 	};
+
 
 	// drop table
 	o.drop = function(tab) {
 		o.run('DROP TABLE IF EXISTS '+tab);
 	};
 
+
 	// insert rows
-	o.insert = function(tab, req, fn) {
-		var cmds = [], params = [];
-		req = _.isArray(req)? req : [req];
-		for(var r=0; r<req.length; r++) {
-			var keys = _.keys(req[r]);
-			cmds.push('INSERT INTO '+tab+'('+keys.join()+') VALUES ('+z.fjoin(keys, '$%i')+')');
-			params.push(z.krename({}, req[r], '$%i'));
+	o.insert = function(tab, gvals, fn) {
+		var stmts = [];
+		if(!_.isArray(gvals)) gvals = [gvals];
+		for(var gv=0; gv<gvals.length; gv++) {
+			var keys = _.keys(gvals[gv]);
+			var cmd = 'INSERT INTO '+tab+'('+keys.join()+') VALUES ('+z.fjoin(keys, '$%i')+')';
+			stmts.push({'cmd': cmd, 'vals': z.krename({}, gvals[gv], '$%i')});
 		}
-		o.batch(cmds, params, fn);
+		o.batch(stmts, fn);
 	};
+
 
 	// delete rows
-	o.delete = function(tab, req, fn) {
-		var cmds = [], params = [];
-		req = _.isArray(req)? req : [req];
-		for(var r=0; r<req.length; r++) {
-			var flt = o.filter(req[r]);
-			cmds.push('DELETE FROM '+tab+flt.cmd);
-			params.push(flt.params);
+	o.delete = function(tab, flts, fn) {
+		var stmts = [];
+		if(!_.isArray(flts)) flts = [flts];
+		for(var f=0; f<flts.length; f++) {
+			var stmt = o.filter(flts[f]);
+			stmt.cmd = 'DELETE FROM '+tab+stmt.cmd;
+			stmts.push(stmt);
 		}
-		o.batch(cmds, params, fn);
+		o.batch(stmts, fn);
 	};
+
 
 	// select rows
-	o.select = function(tab, req, fn) {
-		var cmds = [], params = [];
-		req = _.isArray(req)? req : [req];
-		for(var r=0; r<req.length; r++) {
-			var flt = o.filter(req[r]);
-			cmds.push('SELECT * FROM '+tab+flt.cmd);
-			params.push(flt.params);
+	o.select = function(tab, flts, fn) {
+		var stmts = [];
+		if(!_.isArray(flts)) flts = [flts];
+		for(var f=0; f<flts.length; f++) {
+			var stmt = o.filter(flts[f]);
+			stmt.cmd = 'SELECT * FROM '+tab+stmt.cmd;
+			stmts.push(stmt);
 		}
-		o.batch(cmds, params, fn);
+		o.batch(stmts, fn);
 	};
 
+
 	// update rows
-	o.update = function(tab, req, fn) {
-		var cmds = [], params = [];
-		req = _.isArray(req)? req : [req];
-		for(var r=0; r<req.length; r++) {
-			var cmd = '', param = [];
-			for(var sk in req[r].set) {
+	o.update = function(tab, acts, fn) {
+		var stmts = [];
+		if(!_.isArray(acts)) acts = [acts];
+		for(var a=0; a<acts.length; a++) {
+			var cmd = '', vals = [];
+			for(var sk in acts[a].set) {
 				cmd += sk+'=?, ';
-				param.push(req[r].set[sk]);
+				vals.push(acts[a].set[sk]);
 			}
 			cmd = cmd.substring(0, cmd.length-2);
-			var flt = o.filter(req[r].where);
-			cmds.push('UPDATE '+tab+' SET '+cmd+flt.cmd);
-			z.apush(param, flt.params);
-			params.push(param);
+			var stmt = o.filter(acts[a].flt);
+			stmt.cmd = 'UPDATE '+tab+' SET '+cmd+stmt.cmd;
+			stmt.vals = z.apush(vals, stmt.vals);
+			stmts.push(stmt);
 		}
-		o.batch(cmds, params, fn);
+		o.batch(stmts, fn);
 	};
+
 
 	// ready
 	console.log('db> ready!');

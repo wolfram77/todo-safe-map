@@ -21,35 +21,36 @@ var user = require('./mods/user')(z, db);
 var event = require('./mods/event')(z, db, user);
 
 
-// http interface
+// root page
 app.all('/', function(req, res) {
 	res.sendFile(__dirname+'/assets/index.html');
 });
-app.all('/user/signup', function(req, res) {
+// user interface
+app.all('/i/user/signup', function(req, res) {
 	var freq = req.body;
 	user.signup(freq, function(fres) {
 		res.send(fres);
 	});
 });
-app.all('/user/signoff', function(req, res) {
+app.all('/i/user/signoff', function(req, res) {
 	var freq = req.body;
 	user.signoff(freq, function(fres) {
 		res.send(fres);
 	});
 });
-app.all('/user/signin', function(req, res) {
+app.all('/i/user/signin', function(req, res) {
 	var freq = req.body;
 	user.signin(freq, function(fres) {
 		res.send(fres);
 	});
 });
-app.all('/user/update', function(req, res) {
+app.all('/i/user/update', function(req, res) {
 	var freq = req.body;
 	user.update(freq.key, freq.req, function(fres) {
 		res.send(fres);
 	});
 });
-app.all('/event/get', function(req, res) {
+app.all('/i/event/get', function(req, res) {
 	var freq = req.body;
 	event.get(freq, function(fres) {
 		res.send(fres);

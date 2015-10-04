@@ -19,11 +19,13 @@ module.exports = function() {
 		return dst;
 	};
 
+
 	// push items from source array
 	o.apush = function(dst, src) {
 		Array.prototype.push.apply(dst, src);
 		return dst;
 	};
+
 
 	// formatted join
 	o.fjoin = function(src, fmt, sep) {
@@ -32,11 +34,13 @@ module.exports = function() {
 		return dst;
 	};
 
+
 	// multiple replace
 	o.mreplace = function(src, map) {
 		var re = new RegExp(_.keys(map).join("|"), "g");
 		return src.replace(re, function(m) { return map[m]; });
 	};
+
 
 	// rename keys of object
 	o.krename = function(dst, src, fmt) {
@@ -47,15 +51,18 @@ module.exports = function() {
 		return dst;
 	};
 
+
 	// get keys in gathered/scattered data
 	o.gskeys = function(src) {
 		return _.isArray(src)? _.keys(src[0]) : _.keys(src);
 	};
 
+
 	// get length in gathered/scattered data
 	o.gslen = function(src) {
 		return _.isArray(src)? src.length : src[_.keys(src)[0]].length;
 	};
+
 
 	// gather objects of same kind into arrays
 	o.gather = function(dst, src, ps) {
@@ -65,6 +72,7 @@ module.exports = function() {
 		});
 		return dst;
 	};
+
 
 	// scatter arrays into objects of same kind
 	o.scatter = function(dst, src, ps) {
@@ -76,6 +84,7 @@ module.exports = function() {
 		}
 		return dst;
 	};
+
 
 	// ready
 	console.log('zed> ready!');
