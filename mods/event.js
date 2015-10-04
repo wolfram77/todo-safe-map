@@ -13,7 +13,10 @@ module.exports = function(z, db, user) {
 	var o = new EventEmitter();
 
 	// get
-	o.get = function() {
+	o.get = function(req, fn) {
+		db.select('event', req, function(errs, rows) {
+			if(fn) fn({'status': 'ok', 'res': z.gather({}, rows[0])});
+		});
 	};
 
 	// create

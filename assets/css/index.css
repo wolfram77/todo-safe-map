@@ -1,6 +1,20 @@
 /* @wolfram77 */
 /* INDEX - main css file*/
 
+/* full map */
+html, body, #map {
+	width: 100%;
+	height: 100%;
+}
+#body {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 99;
+}
+
+/* header */
 header nav {
 	display: block;
 	background-color: #8E7;
@@ -14,6 +28,8 @@ header a {
 header a:hover, header a:active, header a.active {
 	background-color: #AF8;
 }
+
+/* logo */
 #logo-img {
 	color: #2E2;
 }
@@ -24,7 +40,7 @@ header a:hover, header a:active, header a.active {
 	color: #A22;
 }
 
-
+/* form */
 form {
 	padding: 1em;
 }

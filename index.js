@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 var z = require('./mods/zed')();
 var db = require('./mods/db')(z);
 var user = require('./mods/user')(z, db);
+var event = require('./mods/event')(z, db, user);
 
 
 // http interface
@@ -42,6 +43,12 @@ app.all('/user/signin', function(req, res) {
 app.all('/user/update', function(req, res) {
 	var freq = req.body;
 	user.update(freq.key, freq.req, function(fres) {
+		res.send(fres);
+	});
+});
+app.all('/event/get', function(req, res) {
+	var freq = req.body;
+	event.get(freq, function(fres) {
 		res.send(fres);
 	});
 });
