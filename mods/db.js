@@ -12,7 +12,7 @@ module.exports = function(z) {
 	var o = new sqlite3.Database('data/data.db');
 
 	// expand % abbreviations
-	var expand = function(cmd) {
+	o.expand = function(cmd) {
 		return z.mreplace(cmd, {
 			'%I': 'INTEGER NOT NULL',
 			'%i': 'INTEGER DEFAULT 0',
@@ -27,7 +27,7 @@ module.exports = function(z) {
 	};
 
 	// create filter (where part)
-	var filter = function(req) {
+	o.filter = function(req) {
 		var cmd = '', p = [];
 		for(var k in req) {
 			var v = req[k], tv = typeof v, f = k;
@@ -53,11 +53,11 @@ module.exports = function(z) {
 
 	// batch execute
 	// fn = (errs, res)
-	o.batch = function(cmd, req, fn) {
-		var stmt = o.prepare(cmd);
+	o.batch = function(cmds, params, fn) {
+		var errs = [], res = [];
 		o.serialize(function() {
-			for(var i=0, errs=[], res=[]; i<req.length; i++)
-				stmt.all(z.krename({}, req[i], '$%i'), function(err, rows) {
+			for(var c=0; c<cmds.length; c++)
+				o.all(cmds[c], params[c], function(err, rows) {
 					if(err) errs[i] = err;
 					if(rows) res[i] = rows;
 				});
@@ -67,22 +67,70 @@ module.exports = function(z) {
 		});
 	};
 
-	// create
+	// create table
 	o.create = function(tab, req, end) {
-		end = end || '';
-		var f = [];
+		var f = [], ke = end || '';
 		for(var i=0; i<req.length; i++)
-			f.push(expand(req[i]));
-		o.run('CREATE TABLE IF NOT EXISTS '+tab+'('+f.join()+')'+end);
+			f.push(o.expand(req[i]));
+		o.run('CREATE TABLE IF NOT EXISTS '+tab+'('+f.join()+')'+ke);
 	};
 
-	// insert
+	// drop table
+	o.drop = function(tab) {
+		o.run('DROP TABLE IF EXISTS '+tab);
+	};
+
+	// insert rows
 	o.insert = function(tab, req, fn) {
+		var cmds = [], params = [];
 		req = _.isArray(req)? req : [req];
-		var keys = _.keys(req);
-		o.batch('INSERT INTO '+tab+'('+keys.join()+') VALUES ('+z.array([], keys.length, '?').join()+')', req, fn);
+		for(var r=0; r<req.length; r++) {
+			var keys = _.keys(req[r]);
+			cmds.push('INSERT INTO '+tab+'('+keys.join()+') VALUES ('+z.fjoin(keys, '$%i')+')');
+			params.push(req[r]);
+		}
+		o.batch(cmds, params, fn);
 	};
 
+	// delete rows
+	o.delete = function(tab, req, fn) {
+		req = _.isArray(req)? req : [req];
+		for(var r=0; r<req.length; r++) {
+			var flt = filter(req[r]);
+			cmds.push('DELETE FROM '+tab+flt.cmd);
+			params.push(flt.params);
+		}
+		o.batch(cmds, params, fn);
+	};
+
+	// select rows
+	o.select = function(tab, req, fn) {
+		req = _.isArray(req)? req : [req];
+		for(var r=0; r<req.length; r++) {
+			var flt = filter(req[r]);
+			cmds.push('SELECT * FROM '+tab+flt.cmd);
+			params.push(flt.params);
+		}
+		o.batch(cmds, params, fn);
+	};
+
+	// update rows
+	o.update = function(tab, req, fn) {
+		req = _.isArray(req)? req : [req];
+		for(var r=0; r<req.length; r++) {
+			var cmd = '', param = [];
+			for(var sk in req[r].set) {
+				cmd += sk+'=?, ';
+				param.push(req[r].set[sk]);
+			}
+			cmd = cmd.substring(0, cmd.length-2);
+			var flt = filter(req[r].where);
+			cmds.push('UPDATE '+tab+' SET '+cmd+flt.cmd);
+			z.apush(param, flt.params);
+			params.push(param);
+		}
+		o.batch(cmds, params, fn);
+	};
 
 	// ready
 	console.log('db> ready!');
