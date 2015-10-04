@@ -56,11 +56,14 @@ module.exports = function(z) {
 	o.batch = function(cmds, params, fn) {
 		var errs = [], res = [];
 		o.serialize(function() {
-			for(var c=0; c<cmds.length; c++)
+			for(var c=0; c<cmds.length; c++) {
+				console.log(cmds[c]);
+				console.log(params[c]);
 				o.all(cmds[c], params[c], function(err, rows) {
-					if(err) errs[i] = err;
-					if(rows) res[i] = rows;
+					if(err) errs[c] = err;
+					if(rows) res[c] = rows;
 				});
+			}
 			o.run('PRAGMA no_op', function() {
 				if(fn) fn(errs, res);
 			});
@@ -87,7 +90,7 @@ module.exports = function(z) {
 		for(var r=0; r<req.length; r++) {
 			var keys = _.keys(req[r]);
 			cmds.push('INSERT INTO '+tab+'('+keys.join()+') VALUES ('+z.fjoin(keys, '$%i')+')');
-			params.push(req[r]);
+			params.push(z.krename({}, req[r], '$%i'));
 		}
 		o.batch(cmds, params, fn);
 	};

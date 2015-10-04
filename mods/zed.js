@@ -27,7 +27,6 @@ module.exports = function() {
 
 	// formatted join
 	o.fjoin = function(src, fmt, sep) {
-		console.log(fmt);
 		for(var i=0,I=src.length,dst=''; i<I; i++)
 			dst += fmt.replace(/%i/g, src[i]) + (i===I-1? '' : sep||',');
 		return dst;

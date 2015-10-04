@@ -63,7 +63,7 @@ app.use(express.static(__dirname+'/assets'));
 // sample data
 var sampledata = function() {
 	var id = 0;
-	var datard = readline.createInterface({'input': fs.createReadStream('data.csv')});
+	var datard = readline.createInterface({'input': fs.createReadStream('data/data.csv')});
 	console.log('sample insert');
 	datard.on('line', function(line) {
 		p = line.split(',');
@@ -74,4 +74,5 @@ var sampledata = function() {
 // start server
 var server = app.listen(80, function() {
 	console.log('safemap>> ready!');
+	sampledata();
 });
