@@ -11,14 +11,16 @@
 	<script src="/js/index.js"></script>
 	<title>safemap</title>
 </head>
-<body>
-<header>
+<body ng-app="app">
+<header ng-controller="valCtrl" ng-init="set(0)">
 <nav>
-	<a href="/signin.html" data-tooltip="sign in"><i class="fa fa-user"></i></a>
-	<a href="/signup.html" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
-	<a href="/" class="active"><i id="logo-img" class="fa fa-map"></i> <span id="logo-safe">safe</span><span id="logo-map">map</span></a>
+	<a ng-class="{active: is(2)}" ng-click="set(2)" href="#" data-tooltip="sign in"><i class="fa fa-user"></i></a>
+	<a ng-class="{active: is(1)}" ng-click="set(1)" href="#" data-tooltip="sign up"><i class="fa fa-user-plus"></i></a>
+	<a ng-class="{active: is(0)}" ng-click="set(0)" href="#">
+		<i id="logo-img" class="fa fa-map"></i> <span id="logo-safe">safe</span><span id="logo-map">map</span>
+	</a>
 </nav>
-<form class="z-depth-2">
+<form class="z-depth-2" ng-show="is(2)">
 <div class="container">
 <div class="row">
 	<div class="input-field col s4">
@@ -37,7 +39,7 @@
 </div>
 </div>
 </form>
-<form class="z-depth-2">
+<form class="z-depth-2" ng-show="is(1)">
 <div class="container">
 <div class="row">
 	<div class="input-field col s6">
