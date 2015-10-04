@@ -3,8 +3,11 @@
 /* run: "node index" */
 
 // required modules
+var fs = require('fs');
+var readline = require('readline');
 var express = require('express');
 var bodyParser = require('body-parser');
+
 
 // start express
 var app = express();
@@ -56,6 +59,17 @@ app.all('/event/get', function(req, res) {
 // static dir
 app.use(express.static(__dirname+'/assets'));
 
+
+// sample data
+var sampledata = function() {
+	var id = 0;
+	var datard = readline.createInterface({'input': fs.createReadStream('data.csv')});
+	console.log('sample insert');
+	datard.on('line', function(line) {
+		p = line.split(',');
+		db.insert('event', {'id': id++, 'x': p[1], 'y': p[0], 'type': 'crime/muggle', 'factor': 1.0});
+	});
+};
 
 // start server
 var server = app.listen(80, function() {
