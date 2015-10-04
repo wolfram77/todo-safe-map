@@ -25,6 +25,55 @@ var event = require('./mods/event')(z, db, user);
 app.all('/', function(req, res) {
 	res.sendFile(__dirname+'/assets/index.html');
 });
+// db interface
+app.all('/i/db/expand', function(req, res) {
+	var p = req.body;
+	res.send({'status': 'ok', 'res': db.expand(p.cmd)});
+});
+app.all('/i/db/filter', function(req, res) {
+	var p = req.body;
+	res.send({'status': 'ok', 'res': db.filter(p.flt)});
+});
+app.all('/i/db/batch', function(req, res) {
+	var p = req.body;
+	db.batch(p.stmts, function(errs, grows) {
+		res.send({'status': 'ok', 'res': {'errs': errs, 'grows': grows}});
+	});
+});
+app.all('/i/db/create', function(req, res) {
+	var p = req.body;
+	db.create(p.tab, p.flds, p.sfx);
+	res.send({'status': 'ok'});
+});
+app.all('/i/db/drop', function(req, res) {
+	var p = req.body;
+	db.drop(p.tab);
+	res.send({'status': 'ok'});
+});
+app.all('/i/db/insert', function(req, res) {
+	var p = req.body;
+	db.insert(p.tab, p.gvals, function(errs, grows) {
+		res.send({'status': 'ok', 'res': {'errs': errs, 'grows': grows}});
+	});
+});
+app.all('/i/db/delete', function(req, res) {
+	var p = req.body;
+	db.delete(p.tab, p.flts, function(errs, grows) {
+		res.send({'status': 'ok', 'res': {'errs': errs, 'grows': grows}});
+	});
+});
+app.all('/i/db/select', function(req, res) {
+	var p = req.body;
+	db.select(p.tab, p.flts, function(errs, grows) {
+		res.send({'status': 'ok', 'res': {'errs': errs, 'grows': grows}});
+	});
+});
+app.all('/i/db/update', function(req, res) {
+	var p = req.body;
+	db.update(p.tab, p.acts, function(errs, grows) {
+		res.send({'status': 'ok', 'res': {'errs': errs, 'grows': grows}});
+	});
+});
 // user interface
 app.all('/i/user/signup', function(req, res) {
 	var freq = req.body;

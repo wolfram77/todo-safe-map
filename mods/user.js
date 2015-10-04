@@ -1,7 +1,7 @@
 /* @wolfram77 */
 /* USER - manages user information */
 /* db: id, pass, type, score, name, age, sex, phone, details */
-/* fn: signup, signoff, signin, id, update */
+/* fn: signup, signoff, signin, id, get, update */
 
 // required modules
 var EventEmitter = require('events').EventEmitter;
@@ -13,48 +13,59 @@ module.exports = function(z, db) {
 	var o = new EventEmitter();
 
 	// sign up
-	o.signup = function(req, fn) {
-		db.insert('user', req, function(errs, rows) {
-			if(fn) fn({'status': (errs[0]? 'err': 'ok'), 'res': req});
+	o.signup = function(vals, fn) {
+		db.insert('user', vals, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok'), 'res': vals});
 		});
 	};
 
+
 	// sign off
 	o.signoff = function(key, fn) {
-		if(typeof id === 'string') db.delete('user_signin', {'user': key});
+		if(typeof key==='string') db.delete('user_signin', {'user': key});
 		else db.delete('user_signin', {'id': key});
 		if(fn) fn({'status': 'ok'});
 	};
 
+
 	// sign in
 	o.signin = function(req, fn) {
 		o.signoff(req.id);
-		db.select('user', {'id': req.id, 'pass': req.pass}, function(errs, rows) {
-			if(rows[0].length!==1) {
+		db.select('user', req, function(errs, grows) {
+			if(grows[0].length!==1) {
 				if(fn) fn({'status': 'err'});
 				return;
 			}
-			var res = {'id': _.now(), 'user': req.id};
-			db.insert('user_signin', res);
+			var signin = {'id': _.now(), 'user': req.id};
+			db.insert('user_signin', signin);
+			if(fn) fn({'status': 'ok', 'res': signin});
+		});
+	};
+
+
+	// get id from key
+	o.id = function(key, fn) {
+		db.select('user_signin', {'id': key}, function(errs, grows) {
+			if(grows[0].length!==1) { if(fn) fn(null); }
+			else if(fn) fn(grows[0].user);
+		});
+	};
+
+
+	// get
+	o.get = function(flt, fn) {
+		db.select('user', flt, function(errs, grows) {
+			var res = z.gather(grows[0]);
+			delete res['pass'];
 			if(fn) fn({'status': 'ok', 'res': res});
 		});
 	};
 
-	// get id from key
-	o.id = function(key, fn) {
-		db.select('user_signin', {'id': key}, function(err, rows) {
-			if(rows[0].length!==1) { if(fn) fn(null); }
-			else if(fn) fn(rows[0].user);
-		});
-	};
 
 	// update
-	o.update = function(key, req, fn) {
-		o.id(key, function(id) {
-			if(id===null) { if(fn) fn({'status': 'err'}); }
-			else db.update('user', {'where': {'id': id}, 'set': req}, function(errs, rows) {
-				if(fn) fn({'status': (errs[0]? 'err': 'ok')});
-			});
+	o.update = function(flt, vals, fn) {
+		db.update('user', {'flt': flt, 'vals': vals}, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
 		});
 	};
 

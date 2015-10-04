@@ -1,6 +1,6 @@
 /* @wolfram77 */
 /* EVENT - manages event information */
-/* db: _id, t, x, y, type, factor, details */
+/* db: id(t), x, y, type, factor, details */
 /* fn:  */
 
 // required modules

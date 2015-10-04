@@ -1,6 +1,6 @@
 /* @wolfram77 */
 /* DB - manages db operations */
-/* fn: expand, batch */
+/* fn: expand, filter, batch, create, drop, insert, delete, select, update */
 
 // required modules
 var sqlite3 = require('sqlite3');
@@ -73,7 +73,7 @@ module.exports = function(z) {
 
 	// create table
 	o.create = function(tab, flds, sfx) {
-		for(var f=0; f<flds.length; f++)
+		for(var f=0, cols=[]; f<flds.length; f++)
 			cols.push(o.expand(flds[f]));
 		o.run('CREATE TABLE IF NOT EXISTS '+tab+'('+cols.join()+')'+(sfx||''));
 	};
@@ -130,9 +130,9 @@ module.exports = function(z) {
 		if(!_.isArray(acts)) acts = [acts];
 		for(var a=0; a<acts.length; a++) {
 			var cmd = '', vals = [];
-			for(var sk in acts[a].set) {
+			for(var sk in acts[a].vals) {
 				cmd += sk+'=?, ';
-				vals.push(acts[a].set[sk]);
+				vals.push(acts[a].vals[sk]);
 			}
 			cmd = cmd.substring(0, cmd.length-2);
 			var stmt = o.filter(acts[a].flt);
