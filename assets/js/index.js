@@ -92,6 +92,7 @@ $(document).ready(function() {
   $('[data-tooltip]').tooltip({'delay': 50});
   $('select').material_select();
   (map = Map('map')).loc(10);
+  // var hash = CryptoJS.MD5("Message");
   req = {
     'id': {'>=': 0, '<': (new Date()).getTime()},
     'x': {'>=': -180.0, '<': 180.0},
