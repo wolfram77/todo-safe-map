@@ -13,12 +13,20 @@ app.use(bodyParser.json());
 
 // start mods
 var z = require('./mods/zed')();
+var db = require('./mods/db')(z);
+var user = require('./mods/user')(z, db);
 
 
 // http interface
 app.all('/', function(req, res) {
 	res.sendFile(__dirname+'/assets/index.html');
 });
+app.all('/user/add', function(req, res) {
+	user.add(req, function(errs, rows) {
+		res.send({'errs': errs, 'rows': rows});
+	});
+});
+
 // static dir
 app.use(express.static(__dirname+'/assets'));
 

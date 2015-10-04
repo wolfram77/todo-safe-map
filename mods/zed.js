@@ -11,6 +11,14 @@ var _ = require('lodash');
 module.exports = function() {
 	var o = new EventEmitter();
 
+	// create initialized array
+	o.array = function(dst, sz, val) {
+		val = val || null;
+		for(var i=0; i<sz; i++)
+			dst.push(val);
+		return dst;
+	};
+
 	// push items from source array
 	o.apush = function(dst, src) {
 		Array.prototype.push.apply(dst, src);
