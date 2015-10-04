@@ -55,9 +55,7 @@ module.exports = function(z, db) {
 	// get
 	o.get = function(flt, fn) {
 		db.select('user', flt, function(errs, grows) {
-			var res = z.gather(grows[0]);
-			delete res['pass'];
-			if(fn) fn({'status': 'ok', 'res': res});
+			if(fn) fn({'status': 'ok', 'res': z.gather({}, grows[0])});
 		});
 	};
 

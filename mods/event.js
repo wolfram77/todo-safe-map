@@ -1,7 +1,7 @@
 /* @wolfram77 */
 /* EVENT - manages event information */
 /* db: id(t), x, y, type, factor, details */
-/* fn:  */
+/* fn: create, get, update, groupadd, groupremove, groupget, groupupdate, contribadd, contribremove, contribget, contribremove */
 
 // required modules
 var EventEmitter = require('events').EventEmitter;
@@ -12,33 +12,92 @@ var _ = require('lodash');
 module.exports = function(z, db, user) {
 	var o = new EventEmitter();
 
-	// get
-	o.get = function(req, fn) {
-		db.select('event', req, function(errs, rows) {
-			if(fn) fn({'status': 'ok', 'res': z.gather({}, rows[0])});
-		});
-	};
-
 	// create
-	o.create = function(key, req, fn) {
-		user.id(key, function(id) {
-			if(id===null) {
-				if(fn) fn({'status': 'err'});
-				return;
-			}
-			req.id = _.now();
-			db.insert('event', req, function(errs, rows) {
-				if(errs[0]) {
-					if(fn) fn({'status': 'err'});
-					return;
-				}
-				if(fn) fn({'status': 'ok', 'res': req});
-			});
+	// to use with loc specifier
+	o.create = function(vals, mbr, fn) {
+		db.insert('event', vals, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
 		});
 	};
 
-	o.groupadd = function(req) {
 
+	// get
+	o.get = function(flt, fn) {
+		db.select('event', flt, function(errs, grows) {
+			if(fn) fn({'status': 'ok', 'res': z.gather({}, grows[0])});
+		});
+	};
+
+
+	// update
+	o.update = function(flt, vals, fn) {
+		db.update('event', {'flt': flt, 'vals': vals}, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
+	};
+
+
+	// add group member
+	o.groupadd = function(vals, fn) {
+		db.insert('event_group', vals, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
+	};
+
+
+	// remove group member
+	o.groupremove = function(flt, fn) {
+		db.delete('event_group', flt, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
+	};
+
+
+	// get group
+	o.groupget = function(flt, fn) {
+		db.select('event_group', flt, function(errs, grows) {
+			if(fn) fn({'status': 'ok', 'res': z.gather({}, grows[0])});
+		});
+	};
+
+
+	// update group member
+	o.groupupdate = function(flt, vals, fn) {
+		db.update('event_group', {'flt': flt, 'vals': vals}, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
+	};
+
+
+	// add contrib
+	o.contribadd = function(vals, fn) {
+		db.insert('event_contrib', vals, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
+	};
+
+
+	// remove contrib
+	o.contribremove = function(flt, fn) {
+		db.delete('event_contrib', flt, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
+	};
+
+
+	// get contrib
+	o.contribget = function(flt, fn) {
+		db.select('event_contrib', flt, function(errs, grows) {
+			if(fn) fn({'status': 'ok', 'res': z.gather({}, grows[0])});
+		});
+	};
+
+
+	// update contrib
+	o.contribupdate = function(flt, vals, fn) {
+		db.update('event_contrib', {'flt': flt, 'vals': vals}, function(errs, grows) {
+			if(fn) fn({'status': (errs[0]? 'err': 'ok')});
+		});
 	};
 
 
