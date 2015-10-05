@@ -3,7 +3,7 @@
 
 // initialize
 var app = angular.module('app', []);
-var z = null, user = null, map = null;
+var z = null, O = null, user = null, map = null, heatmap = null, heatmapdata = new google.maps.MVCArray([]);
 
 
 // z module
@@ -60,6 +60,7 @@ var z = (function() {
 // main controller
 app.controller('mainCtrl', ['$scope', '$http', function($scope, $http) {
 	var o = $scope;
+	O = o;
 	o.events = [];
 	o.user = {};
 	o.a = false;
@@ -226,6 +227,58 @@ app.controller('mainCtrl', ['$scope', '$http', function($scope, $http) {
 			o.eview(o.event[0].id);
 		});
 	};
+
+	// event user
+	o.euserview = function(id) {
+		$.post('/i/user/get', {'flt': {'id': id}}, function(res) {
+			$scope.$apply(function() {
+				o.euser = z.scatter([], res.res);
+				o.euser[0].uidhash = CryptoJS.MD5(o.user.id).toString();
+			});
+		});
+		o.mset(7);
+	};
+
+
+	// update maps
+	o.updtmaps = function(start, end) {
+		$.post('/i/event/get', {'flt': {'id': {'>=': start, '<': end}}}, function(res) {
+			res = z.scatter([], res.res);
+			var first = heatmapdata.length===0;
+			for(var i=0; i<res.length; i++)
+				heatmapdata.push({
+					'location': new google.maps.LatLng(res[i].y, res[i].x),
+					'weight': 1.0
+				});
+			var accdist = 1;
+			if(!first && res.length>0) {
+				$.post('/i/event/groupget', {'flt': {'event': res[0].id, 'user': o.user.id}}, function(gres) {
+					if(z.scatter([], gres.res).length>0) return;
+					map.loc(null, function(pos) {
+						dx = pos.lng()-res[0].x;
+						dy = pos.lat()-res[0].y;
+						if(Math.sqrt(dx*dx + dy*dy) > accdist) return;
+						Materialize.toast('near event ocurred!', 3000, 'rounded');
+						setTimeout(function() {
+							vals = {'event': res[0].id, 'user': o.user.id, 'type': 'user'};
+							$.post('/i/event/groupadd', {'vals': vals}, function(gres) {
+								if(gres.status==='err') Materialize.toast('add self failed!', 3000, 'rounded');
+								o.eview(res[0].id);
+							});
+						}, 3000);
+					});
+				});
+			}
+			if(!first) return;
+			var heatmap = new google.maps.visualization.HeatmapLayer({
+				'dissipating': false,
+				'maxIntensity': 100,
+				'radius': 1,
+				'data': heatmapdata
+			});
+			heatmap.setMap(map);
+		});
+	};
 }]);
 
 
@@ -288,26 +341,14 @@ $(document).ready(function() {
 	$('[data-tooltip]').tooltip({'delay': 50});
 	$('select').material_select();
 	(map = Map('map')).loc(10);
-	// var hash = CryptoJS.MD5("Message");
-	req = {
-		'id': {'>=': 0, '<': (new Date()).getTime()},
-		'x': {'>=': -180.0, '<': 180.0},
-		'y': {'>=': -90.0, '<': 90.0},
-		'type': 'crime/muggle'
-	};
-	$.post('/event/get', req, function(res) {
-		res = res.res;
-		heatmapdata = [];
-		for(var i=0; i<res.id.length; i++)
-			heatmapdata[i] = {
-				'location': new google.maps.LatLng(res.y[i], res.x[i]),
-				'weight': 1.0
-			};
-			var heatmap = new google.maps.visualization.HeatmapLayer({
-				'dissipating': false,
-				'maxIntensity': 100,
-				'data': heatmapdata
-			});
-			heatmap.setMap(map);
-	});
+	var updtmaps = angular.element(document.getElementById('header')).scope().updtmaps;
+	var tstart = 0, tend = _.now();
+	setInterval(function() {
+		updtmaps(tstart, tend);
+		tstart = tend;
+		tend = _.now();
+	}, 10000);
+	updtmaps(tstart, tend);
+	tstart = tend;
+	tend = _.now();
 });
