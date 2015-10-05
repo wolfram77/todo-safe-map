@@ -4,6 +4,7 @@
 
 // required modules
 var fs = require('fs');
+var moment = require('moment');
 var readline = require('readline');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -184,6 +185,7 @@ var sampledata = function() {
 	console.log('sample insert');
 	datard.on('line', function(line) {
 		p = line.split(',');
+		
 		db.insert('event', {'id': id++, 'x': p[1], 'y': p[0], 'type': 'crime/muggle', 'factor': 1.0});
 	});
 };
