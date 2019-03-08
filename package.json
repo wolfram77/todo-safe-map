@@ -1,6 +1,6 @@
 {
   "name": "web-safemap",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "crime prevention and support web app",
   "main": "index.js",
   "scripts": {
@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/wolfram77/web-safemap#readme",
   "dependencies": {
-    "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "lodash": "^3.10.1",
-    "moment": "^2.10.6",
-    "sqlite3": "^3.1.0"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "sqlite3": "^4.0.6"
   }
 }
